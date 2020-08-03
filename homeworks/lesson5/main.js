@@ -44,19 +44,21 @@ class Cart {
 }
 
 class Product {
-    constructor(name, price) {
+    constructor(name, price, image) {
         this.name = name
         this.price = price
+        this.image = image
     }
     name = ''
     price = 0
+    image = ''
 }
 
-const banana = new Product('Banana', 70)
-const apple = new Product('Apple', 50)
-const tomato = new Product('Tomato', 30)
-const lemon = new Product('Lemon', 80)
-const pineapple = new Product('Pineapple', 150)
+const banana = new Product('Banana', 70, ['./images/banana.png', './images/banana2.png'])
+const apple = new Product('Apple', 50, ['./images/apple.png', './images/apple2.png'])
+const tomato = new Product('Tomato', 30, ['./images/tomato.png', './images/tomato2.png'])
+const lemon = new Product('Lemon', 80, ['./images/lemon.png', './images/lemon2.png'])
+const pineapple = new Product('Pineapple', 150, ['./images/pineapple.png', './images/pineapple2.png'])
 
 // CART:
 
@@ -72,40 +74,87 @@ const getHeaderText = el => {
     else el.innerText = `В корзине: ${cart.length} ${getProductText(cart.length)} на сумму ${newCart.countCartPrice()} рублей`
 }
 
+const modal = document.getElementById('myModal');
+const modalImg = document.getElementById('img01');
+const span = document.querySelector('.close');
+
 const refetchCart = node => {
     node.innerHTML = '';
     cart.forEach(p => {
+        const productImage = document.createElement('img')
         const productName = document.createElement('div')
         const productPrice = document.createElement('div')
         const removeFromCart = document.createElement('button')
+        const next = document.createElement('span')
+        const previous = document.createElement('span')
+        let imageState = ''
+
+        productName.innerText = p.name
+        productPrice.innerText = p.price
+        removeFromCart.innerText = 'Удалить'
+        next.innerText = '>'
+        previous.innerText = '<'
+
+        next.classList.add('arrow', 'next')
+        previous.classList.add('arrow', 'previous')
+        productImage.classList.add('image')
+        productName.classList.add('productCell')
+        productPrice.classList.add('productCell')
+        removeFromCart.classList.add('button', 'remove')
+
+        productImage.src = p.image[0]
+
+        productImage.onclick = () => {
+            modal.appendChild(next)
+            modal.appendChild(previous)
+            modal.style.display = "block";
+            imageState = p.image[0]
+            modalImg.src = p.image[0];
+        }
+
+        next.onclick = () => {
+            const currentImageIndex = p.image.findIndex(i => i === imageState)
+            const neededImagePath = currentImageIndex+2 > p.image.length ? p.image[0] : p.image[currentImageIndex+1]
+            imageState = neededImagePath
+            modalImg.src = neededImagePath
+        }
+
+        previous.onclick = () => {
+            const currentImageIndex = p.image.findIndex(i => i === imageState)
+            const neededImagePath = currentImageIndex === 0 ? p.image[p.image.length-1] : p.image[currentImageIndex-1]
+            imageState = neededImagePath
+            modalImg.src = neededImagePath
+        }
     
         removeFromCart.onclick = () => {
             const removeIndex = cart.findIndex(i => i.name === p.name)
             cart.splice(removeIndex, 1)
-            productTable.removeChild(productName)
-            productTable.removeChild(productPrice)
-            productTable.removeChild(removeFromCart)
+            node.removeChild(productImage)
+            node.removeChild(productName)
+            node.removeChild(productPrice)
+            node.removeChild(removeFromCart)
             getHeaderText(cartHeader)
         }
         
-        productName.innerText = p.name
-        productPrice.innerText = p.price
-        removeFromCart.innerText = 'Удалить'
-        productTable.appendChild(productName)
-        productTable.appendChild(productPrice)
-        productTable.appendChild(removeFromCart)   
+        node.appendChild(productImage)
+        node.appendChild(productName)
+        node.appendChild(productPrice)
+        node.appendChild(removeFromCart)   
     })
 }
 
 const root = document.getElementById('chessplate')
 const cartHeader = document.createElement('div')
+
 cartHeader.classList.add('header')
 getHeaderText(cartHeader)
 root.appendChild(cartHeader)
+
 const productTable = document.createElement('div')
 productTable.classList.add('table')
 root.appendChild(productTable)
-const headerCells = ['Наименование', 'Цена', '']
+
+const headerCells = ['', 'Наименование', 'Цена', '']
 
 headerCells.forEach(c => {
     const tableHeaderCell = document.createElement('div')
@@ -130,9 +179,48 @@ headerCells.forEach(c => {
 })
 
 products.forEach(p => {
+    const productImage = document.createElement('img')
     const productName = document.createElement('div')
     const productPrice = document.createElement('div')
     const addToCart = document.createElement('button')
+    const next = document.createElement('span')
+    const previous = document.createElement('span')
+    let imageState = ''
+
+    productName.innerText = p.name
+    productPrice.innerText = p.price
+    addToCart.innerText = 'В корзину'
+    next.innerText = '>'
+    previous.innerText = '<'
+
+    next.classList.add('arrow', 'next')
+    previous.classList.add('arrow', 'previous')
+    productImage.classList.add('image')
+    productName.classList.add('productCell')
+    productPrice.classList.add('productCell')
+    addToCart.classList.add('button', 'add')
+
+    productImage.src = p.image[0]
+
+    productImage.onclick = () => {
+        modal.style.display = "block";
+        imageState = p.image[0]
+        modalImg.src = p.image[0];
+    }
+
+    next.onclick = () => {
+        const currentImageIndex = p.image.findIndex(i => i === imageState)
+        const neededImagePath = currentImageIndex+2 > p.image.length ? p.image[0] : p.image[currentImageIndex+1]
+        imageState = neededImagePath
+        modalImg.src = neededImagePath
+    }
+
+    previous.onclick = () => {
+        const currentImageIndex = p.image.findIndex(i => i === imageState)
+        const neededImagePath = currentImageIndex === 0 ? p.image[p.image.length-1] : p.image[currentImageIndex-1]
+        imageState = neededImagePath
+        modalImg.src = neededImagePath
+    }
 
     addToCart.onclick = () => {
         cart.push(p)
@@ -140,10 +228,16 @@ products.forEach(p => {
         getHeaderText(cartHeader)
     }
     
-    productName.innerText = p.name
-    productPrice.innerText = p.price
-    addToCart.innerText = 'В корзину'
+    catalog.appendChild(productImage)
     catalog.appendChild(productName)
     catalog.appendChild(productPrice)
     catalog.appendChild(addToCart)   
 })
+
+span.onclick = () => {
+    const next = document.querySelector('.next')
+    const previous = document.querySelector('.previous')
+    modal.removeChild(next)
+    modal.removeChild(previous)
+    modal.style.display = "none";
+}
