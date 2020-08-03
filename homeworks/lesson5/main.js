@@ -203,6 +203,8 @@ products.forEach(p => {
     productImage.src = p.image[0]
 
     productImage.onclick = () => {
+        modal.appendChild(next)
+        modal.appendChild(previous)
         modal.style.display = "block";
         imageState = p.image[0]
         modalImg.src = p.image[0];
