@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script defer src="main.js"></script>
+    <style>
+        /* For 1) */
+        .row {
+            height: 50px;
+            width: max-content;
+            display: flex;
+        }
+        .cell {
+            width: 50px;
+            height: 50px;
+            box-sizing: border-box;
+            border: 1px solid #6d4933;
+        }
+        .white {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .black {
+            background-color: #6d4933;
+            color: #ffffff;
+        }
+        /* For 2) */
+        .header {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        .table {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    <div style="width: 500px" id="chessplate"></div>
+    <div style="width: 500px; margin-top: 24px" id="catalog"></div>
+</body>
+</html>
