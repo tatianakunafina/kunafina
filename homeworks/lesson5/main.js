@@ -71,7 +71,7 @@ const getHeaderText = el => {
         else return 'товаров'
     }
     if (cart.length === 0) el.innerText =  'Корзина пуста'
-    else el.innerText = `В корзине: ${cart.length} ${getProductText(cart.length)} на сумму ${newCart.countCartPrice()} рублей`
+    else el.innerHTML = `<span>В корзине: ${cart.length} ${getProductText(cart.length)} на сумму ${newCart.countCartPrice()} рублей </span><button class="hideButton">Hide cart</button>`
 }
 
 const modal = document.getElementById('myModal');
@@ -242,4 +242,17 @@ span.onclick = () => {
     modal.removeChild(next)
     modal.removeChild(previous)
     modal.style.display = "none";
+}
+
+const hideButton = document.querySelector('.hideButton')
+console.log(hideButton)
+hideButton.onclick = () => {
+    console.log(productTable.classList.contains('hideCart'))
+    if(productTable.classList.contains('hideCart')) {
+        productTable.classList.remove('hideCart')
+        hideButton.innerText = 'Hide cart'
+    } else {
+        productTable.classList.add('hideCart')
+        hideButton.innerText = 'Show cart'
+    }
 }

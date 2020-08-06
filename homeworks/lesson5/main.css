@@ -39,6 +39,17 @@ button {
     display: grid;
     grid-template-columns: 2fr 2fr 1fr 1fr;
 }
+.hideButton {
+    border: 1px solid black;
+    border-radius: 6px;
+    padding: 8px;
+}
+.hideButton:hover {
+    background-color: #e2e2e2;
+}
+.hideCart {
+    display: none;
+}
 .productCell {
     display: flex;
     align-items: center;
